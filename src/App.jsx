@@ -3,12 +3,16 @@ import { chapters, introduction, worksCited } from './storyContent'
 import './App.css'
 
 const events = chapters.flatMap(chapter =>
-  chapter.events.map((event, index) => ({
-    ...event,
-    chapter,
-    number: index + 1,
-    title: event.title || `Event ${formatNumber(index + 1)}`,
-  })),
+  chapter.events.map((event, index) => {
+    const summary = event.summary ?? event
+    return {
+      chapter,
+      summary,
+      title: summary.title || `Event ${formatNumber(index + 1)}`,
+      date: summary.date,
+      content: event.content ?? legacyEventContent(event),
+    }
+  }),
 )
 const chapterStarts = chapters.map(chapter => events.findIndex(event => event.chapter === chapter))
 const lastEvent = events.length - 1
@@ -18,6 +22,28 @@ function formatNumber(value) {
   return String(value).padStart(2, '0')
 }
 
+function legacyEventContent(event) {
+  const blocks = []
+  if (event.image) {
+    blocks.push({
+      type: 'image',
+      src: event.image,
+      alt: event.imageAlt,
+      caption: event.imageCredit,
+    })
+  }
+  if (event.description) {
+    for (const text of event.description.split(/\n\s*\n/)) {
+      blocks.push({ type: 'paragraph', text })
+    }
+  }
+  return blocks
+}
+
+function eventImageSource(src) {
+  return src.startsWith('/images/') ? `${import.meta.env.BASE_URL}${src.slice(1)}` : src
+}
+
 function Icon({ name, size = 20 }) {
   const paths = {
     football: <><path d="M4 20C1 12 7 3 20 4c3 8-3 17-16 16Z" /><path d="m8 16 8-8M9 11l4 4M11 9l4 4M13 7l4 4M4 14l6 6M14 4l6 6" /></>,
@@ -25,7 +51,6 @@ function Icon({ name, size = 20 }) {
     right: <path d="M5 12h14m-6-6 6 6-6 6" />,
     down: <path d="M12 5v14m-6-6 6 6 6-6" />,
     up: <path d="M12 19V5m-6 6 6-6 6 6" />,
-    close: <path d="m6 6 12 12M18 6 6 18" />,
     image: <><rect x="3" y="4" width="18" height="16" rx="1" /><circle cx="9" cy="9" r="1.5" /><path d="m4 17 5-4 4 3 3-5 5 5" /></>,
   }
 
@@ -203,17 +228,15 @@ function Overview() {
   )
 }
 
-function EventImage({ event, detail = false }) {
+function EventCardImage({ image, imageAlt }) {
+  if (image) {
+    return <img className="event-card-image" src={eventImageSource(image)} alt={imageAlt || ''} loading="lazy" />
+  }
   return (
-    <figure className={`event-image${event.image ? ' has-image' : ''}`}>
-      {event.image
-        ? <img src={event.image} alt={event.imageAlt || ''} loading="lazy" />
-        : <div className="event-image-placeholder" aria-hidden="true">
-            <Icon name="image" size={24} />
-            <span>Image placeholder</span>
-          </div>}
-      {detail && event.imageCredit && <figcaption>{event.imageCredit}</figcaption>}
-    </figure>
+    <span className="event-card-image-placeholder" aria-hidden="true">
+      <Icon name="image" size={24} />
+      <span>Image placeholder</span>
+    </span>
   )
 }
 
@@ -306,14 +329,32 @@ function EventCard({ card, active, onOpen }) {
       aria-label={`Open ${event.title}, ${event.chapter.title}`}
     >
       <span className="event-card-era">{event.chapter.title}</span>
-      <EventImage event={event} />
+      <EventCardImage image={event.summary.image} imageAlt={event.summary.imageAlt} />
       <div className="event-card-copy">
         <div className="event-card-title">{event.title}</div>
         <div className="event-date">{event.date || 'Date placeholder'}</div>
-        {event.description && <p className="event-card-preview">{event.description}</p>}
+        {event.summary.description && <p className="event-card-preview">{event.summary.description}</p>}
       </div>
     </button>
   )
+}
+
+function EventContentBlock({ block }) {
+  switch (block.type) {
+    case 'heading':
+      return <h3>{block.text}</h3>
+    case 'paragraph':
+      return <p>{block.text}</p>
+    case 'image':
+      return (
+        <figure className={block.wide ? 'event-detail-image is-wide' : 'event-detail-image'}>
+          <img src={eventImageSource(block.src)} alt={block.alt || ''} loading="lazy" />
+          {block.caption && <figcaption>{block.caption}</figcaption>}
+        </figure>
+      )
+    default:
+      return null
+  }
 }
 
 function EventDialog({ event, dialogRef, onClose }) {
@@ -322,24 +363,26 @@ function EventDialog({ event, dialogRef, onClose }) {
       className={`event-dialog era-${event?.chapter.id || chapters[0].id}`}
       ref={dialogRef}
       onClose={onClose}
-      onClick={e => {
-        if (e.target === e.currentTarget) e.currentTarget.close()
-      }}
       aria-labelledby="event-dialog-title"
     >
       {event && (
         <article className="event-detail">
-          <div className="event-detail-bar">
-            <span>{event.chapter.title} / {formatNumber(event.number)}</span>
-            <form method="dialog"><button className="icon-button" aria-label="Close event"><Icon name="close" /></button></form>
-          </div>
-          <EventImage event={event} detail />
+          <header className="event-detail-bar">
+            <div className="event-detail-bar-inner">
+              <form method="dialog">
+                <button className="event-detail-back"><Icon name="left" size={18} /> Back to timeline</button>
+              </form>
+              <span>{event.chapter.title}</span>
+            </div>
+          </header>
           <div className="event-detail-copy">
-            <div className="event-date">{event.date || 'Date placeholder'}</div>
-            <h2 id="event-dialog-title">{event.title}</h2>
-            {(event.description || '[Add the story for this event.]').split(/\n\s*\n/).map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
+            <div className="event-detail-title">
+              {event.date && <div className="event-date">{event.date}</div>}
+              <h2 id="event-dialog-title">{event.title}</h2>
+            </div>
+            {event.content.length
+              ? event.content.map((block, index) => <EventContentBlock key={index} block={block} />)
+              : <p>[Add the story for this event.]</p>}
           </div>
         </article>
       )}
@@ -396,7 +439,11 @@ function Timeline() {
   }
 
   useEffect(() => {
-    if (detail && !dialogRef.current.open) dialogRef.current.showModal()
+    const dialog = dialogRef.current
+    if (detail && !dialog.open) {
+      dialog.showModal()
+      dialog.scrollTop = 0
+    }
   }, [detail])
 
   function closeEvent() {

@@ -1,8 +1,38 @@
-// Replace an empty object with an event in chronological order. Every field is optional.
-// Example: { title: 'Event title', date: '1904', image: '/images/photo.jpg',
-//   imageAlt: 'Description of the photo', imageCredit: 'Archive or photographer',
-//   description: 'Your story goes here.' }
-// Put local photos in public/images. Use a blank line to start a new paragraph.
+// Edit the matching file in src/events to update an event.
+// See before-tech-01.js for an example of the summary and content fields.
+
+import beforeTech01 from './events/before-tech-01.js'
+import beforeTech02 from './events/before-tech-02.js'
+import beforeTech03 from './events/before-tech-03.js'
+import beforeTech04 from './events/before-tech-04.js'
+import beforeTech05 from './events/before-tech-05.js'
+import beforeTech06 from './events/before-tech-06.js'
+import beforeTech07 from './events/before-tech-07.js'
+import beforeTech08 from './events/before-tech-08.js'
+import beforeTech09 from './events/before-tech-09.js'
+import beforeTech10 from './events/before-tech-10.js'
+
+import duringTech01 from './events/during-tech-01.js'
+import duringTech02 from './events/during-tech-02.js'
+import duringTech03 from './events/during-tech-03.js'
+import duringTech04 from './events/during-tech-04.js'
+import duringTech05 from './events/during-tech-05.js'
+import duringTech06 from './events/during-tech-06.js'
+import duringTech07 from './events/during-tech-07.js'
+import duringTech08 from './events/during-tech-08.js'
+import duringTech09 from './events/during-tech-09.js'
+import duringTech10 from './events/during-tech-10.js'
+
+import afterTech01 from './events/after-tech-01.js'
+import afterTech02 from './events/after-tech-02.js'
+import afterTech03 from './events/after-tech-03.js'
+import afterTech04 from './events/after-tech-04.js'
+import afterTech05 from './events/after-tech-05.js'
+import afterTech06 from './events/after-tech-06.js'
+import afterTech07 from './events/after-tech-07.js'
+import afterTech08 from './events/after-tech-08.js'
+import afterTech09 from './events/after-tech-09.js'
+import afterTech10 from './events/after-tech-10.js'
 
 export const introduction = {
   title: 'John Heisman',
@@ -23,16 +53,16 @@ export const chapters = [
     title: 'Before Tech',
     years: '1869–1903',
     events: [
-      {}, // 01
-      {}, // 02
-      {}, // 03
-      {}, // 04
-      {}, // 05
-      {}, // 06
-      {}, // 07
-      {}, // 08
-      {}, // 09
-      {}, // 10
+      beforeTech01,
+      beforeTech02,
+      beforeTech03,
+      beforeTech04,
+      beforeTech05,
+      beforeTech06,
+      beforeTech07,
+      beforeTech08,
+      beforeTech09,
+      beforeTech10,
     ],
   },
   {
@@ -40,16 +70,16 @@ export const chapters = [
     title: 'During Tech',
     years: '1904–1919',
     events: [
-      {}, // 01
-      {}, // 02
-      {}, // 03
-      {}, // 04
-      {}, // 05
-      {}, // 06
-      {}, // 07
-      {}, // 08
-      {}, // 09
-      {}, // 10
+      duringTech01,
+      duringTech02,
+      duringTech03,
+      duringTech04,
+      duringTech05,
+      duringTech06,
+      duringTech07,
+      duringTech08,
+      duringTech09,
+      duringTech10,
     ],
   },
   {
@@ -57,16 +87,16 @@ export const chapters = [
     title: 'After Tech',
     years: '1920 onward',
     events: [
-      {}, // 01
-      {}, // 02
-      {}, // 03
-      {}, // 04
-      {}, // 05
-      {}, // 06
-      {}, // 07
-      {}, // 08
-      {}, // 09
-      {}, // 10
+      afterTech01,
+      afterTech02,
+      afterTech03,
+      afterTech04,
+      afterTech05,
+      afterTech06,
+      afterTech07,
+      afterTech08,
+      afterTech09,
+      afterTech10,
     ],
   },
 ]
