@@ -1,4 +1,6 @@
 export default {
-  summary: {},
+  summary: {
+    title: 'Hello, world!',
+  },
   content: [],
 }
