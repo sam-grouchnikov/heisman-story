@@ -117,28 +117,18 @@ function Field({ motion = 0, className = '' }) {
   )
 }
 
-function Scoreboard() {
-  const teams = [
-    { name: introduction.homeTeam, score: introduction.homeScore },
-    { name: introduction.awayTeam, score: introduction.awayScore },
-  ]
-
+function IntroPhotos({ photos, lazy = false }) {
   return (
-    <div className="scoreboard" role="img" aria-label={`Final score, ${introduction.date}. ${teams.map(team => `${team.name} ${team.score}`).join(', ')}.`}>
-      <div className="scoreboard-face" aria-hidden="true">
-        <div className="scoreboard-heading"><span /> FINAL SCORE <span /></div>
-        <div className="scoreboard-teams">
-          {teams.map(team => (
-            <div className="scoreboard-team" key={team.name}>
-              <div className="scoreboard-team-name">{team.name}</div>
-              <div className="scoreboard-score">
-                {Array.from(team.score, (digit, index) => <span className="score-digit" key={index}>{digit}</span>)}
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="scoreboard-date">{introduction.date}</div>
-      </div>
+    <div className="intro-photos">
+      {photos.map(({ src, width, height, alt, caption, credit, source }) => (
+        <figure key={src}>
+          <img src={eventImageSource(src)} alt={alt} width={width} height={height} loading={lazy ? 'lazy' : 'eager'} />
+          <figcaption>
+            <span>{caption}</span>
+            <a href={source}>{credit}</a>
+          </figcaption>
+        </figure>
+      ))}
     </div>
   )
 }
@@ -150,21 +140,17 @@ function Introduction() {
 
   return (
     <section id="intro" className="intro-scroll" ref={sectionRef} aria-labelledby="hook-title">
-      <div
-        className="intro-scene"
-        ref={sceneRef}
-        style={{ '--intro-offset': `${progress * -24}px`, '--score-turn': `${-8 + progress * 12}deg` }}
-      >
+      <div className="intro-scene" ref={sceneRef} style={{ '--intro-offset': `${progress * -24}px` }}>
         <Field className="intro-field" motion={progress * 168} />
         <div className="intro-inner">
           <div className="intro-copy">
-            <div className="intro-location"><span />{introduction.location}</div>
-            <h2 id="hook-title" className="intro-question">{introduction.question}</h2>
+            <p className="intro-location"><span />{introduction.location}</p>
+            <h2 id="hook-title" className="intro-heading">{introduction.heading}</h2>
+            <p className="intro-game-story">{introduction.gameStory}</p>
+            <p className="intro-question">{introduction.question}</p>
+            <a className="explore-link" href="#overview"><Icon name="down" size={17} /> Meet the coach</a>
           </div>
-          <div className="intro-score"><Scoreboard /></div>
-        </div>
-        <div className="intro-footer">
-          <a className="explore-link" href="#overview"><Icon name="down" size={17} /> Meet the coach</a>
+          <IntroPhotos photos={introduction.gamePhotos} />
         </div>
       </div>
     </section>
@@ -212,17 +198,13 @@ function Overview() {
         <div className="story-overview-copy">
           <p className="section-label"><span />{introduction.subtitle}</p>
           <h1 id="overview-title">{introduction.title}</h1>
-          <p className="story-overview-summary">{introduction.description}</p>
-          <p className="story-overview-lead">Follow his life before, during, and after Georgia Tech.</p>
+          {introduction.description.map(paragraph => (
+            <p key={paragraph} className="story-overview-summary">{paragraph}</p>
+          ))}
+          <p className="story-overview-lead">{introduction.lead}</p>
           <a className="explore-link" href="#timeline"><Icon name="down" size={17} /> Explore the timeline</a>
         </div>
-        <figure className="story-overview-portrait">
-          <img src={`${import.meta.env.BASE_URL}images/john-heisman-georgia-tech.jpg`} alt="John Heisman in round glasses and a suit" width="406" height="492" />
-          <figcaption>
-            <span>John Heisman, c. 1918</span>
-            <a href="https://commons.wikimedia.org/wiki/File:HeismanatTech.jpg">Georgia Tech Archives</a>
-          </figcaption>
-        </figure>
+        <IntroPhotos photos={introduction.overviewPhotos} lazy />
       </div>
     </section>
   )

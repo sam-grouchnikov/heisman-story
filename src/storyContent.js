@@ -34,17 +34,60 @@ import afterTech08 from './events/after-tech-08.js'
 import afterTech09 from './events/after-tech-09.js'
 import afterTech10 from './events/after-tech-10.js'
 
+const historyPhotoSource = 'https://www.history.com/articles/john-heisman-coach-college-football-trophy'
+
 export const introduction = {
   title: 'John Heisman',
-  subtitle: 'The Life Behind the Legend',
-  description: 'John Heisman coached Georgia Tech football from 1904 to 1919 and led the team to its first national title in 1917. He pushed to legalize the forward pass, helping reshape the game. The Heisman Memorial Trophy was named for him after his death.',
+  subtitle: 'The Coach Behind the Trophy',
   location: 'Grant Field · Atlanta',
-  date: 'October 7, 1916',
-  question: 'Who coached this game?',
-  homeTeam: 'Georgia Tech',
-  homeScore: '222',
-  awayTeam: 'Cumberland',
-  awayScore: '0',
+  heading: '222–0',
+  gameStory: 'On October 7, 1916, the Georgia Tech Golden Tornadoes beat Cumberland by a margin that still stands as the largest in college football history.',
+  question: 'Who coached Georgia Tech that day?',
+  description: [
+    'Every year, the Heisman Trophy goes to an outstanding college football player. It took John Heisman’s name after his death in 1936, honoring a coach who had already changed how the game was played.',
+    'Heisman coached at Georgia Tech from 1904 to 1919. He pressed for the rule change that legalized the forward pass in 1906 and led Georgia Tech to its first national championship in 1917.',
+  ],
+  lead: 'The story begins in the fall of 1869, when Heisman was born in Cleveland, Ohio.',
+  gamePhotos: [
+    {
+      src: '/images/cumberland-game-1916.jpg',
+      width: 800,
+      height: 617,
+      alt: 'Football players gather around a tackle at Grant Field',
+      caption: 'Georgia Tech vs. Cumberland, 1916',
+      credit: 'Georgia Tech Archives',
+      source: 'https://repository.gatech.edu/bitstreams/5a059260-e64e-490e-b989-7df0b8c51a7e/download',
+    },
+    {
+      src: '/images/cumberland-scoreboard-1916.jpg',
+      width: 1200,
+      height: 515,
+      alt: 'Scoreboard showing Georgia Tech scoring 63, 63, 54 and 42 by quarter for a total of 222, with Cumberland at zero',
+      caption: 'The final score',
+      credit: 'From The Rumble Seat',
+      source: 'https://www.fromtherumbleseat.com/2011/10/7/2475194/95-years-ago-today-georgia-tech-defeated-cumberland-222-0',
+    },
+  ],
+  overviewPhotos: [
+    {
+      src: '/images/john-heisman-portrait.jpg',
+      width: 1080,
+      height: 540,
+      alt: 'Black-and-white portrait of John Heisman in a dark athletic shirt',
+      caption: 'John Heisman',
+      credit: 'Collegiate Images / Getty Images',
+      source: historyPhotoSource,
+    },
+    {
+      src: '/images/heisman-memorial-trophy.jpg',
+      width: 1200,
+      height: 766,
+      alt: 'The bronze Heisman Trophy depicts a football player with one arm extended',
+      caption: 'The Heisman Memorial Trophy',
+      credit: 'Kelly Kline / Heisman Trophy Trust / Getty Images',
+      source: historyPhotoSource,
+    },
+  ],
 }
 
 export const chapters = [

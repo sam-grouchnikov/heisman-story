@@ -82,16 +82,15 @@
   --field-dark: #111811;
   --turf: #333f2d;
   --field-ink: #d6cd9b;
-  height: calc(var(--scene-height) + 18svh);
+  padding-bottom: 18svh;
 }
 
 .intro-scene {
   position: sticky;
   top: var(--header-height);
   isolation: isolate;
-  height: var(--scene-height);
+  min-height: var(--scene-height);
   display: grid;
-  grid-template-rows: 1fr auto;
   overflow: hidden;
   background: var(--field-dark);
 }
@@ -211,7 +210,7 @@
   width: min(100%, var(--page-width));
   min-width: 0;
   margin-inline: auto;
-  padding: 32px var(--page-gutter) 22px;
+  padding: clamp(24px, 5svh, 58px) var(--page-gutter);
   display: grid;
   grid-template-columns: 1fr 1.08fr;
   gap: clamp(20px, 5.4vw, 85px);
@@ -240,114 +239,64 @@
   background: currentColor;
 }
 
-.intro-question {
-  max-width: 9ch;
-  margin-top: 19px;
-  font: 800 clamp(68px, 8.55vw, 139px)/.83 var(--display);
-  letter-spacing: -.018em;
-  text-transform: uppercase;
-}
-
-.intro-score {
-  min-width: 0;
-  perspective: 1100px;
-  perspective-origin: 40% 40%;
-  transform: translateY(calc(var(--intro-offset) * -1.2));
-}
-
-.scoreboard {
-  position: relative;
-  padding: clamp(8px, 1.13vw, 18px);
-  border: 1px solid #b89e69;
-  background: linear-gradient(145deg, #675137, #302c20 70%);
-  transform: rotateY(var(--score-turn)) rotateX(3deg);
-  box-shadow:
-    inset 0 0 0 3px #241f15,
-    inset 0 0 0 4px #8e7445,
-    5px 6px #191813,
-    6px 7px #4d402a,
-    0 22px 50px #10140e9e;
-}
-
-.scoreboard-face {
-  padding: clamp(13px, 2.15vw, 36px) clamp(13px, 2.5vw, 40px);
-  border: 1px solid #74603c;
-  background:
-    repeating-linear-gradient(0deg, #f5cf8c03 0 1px, transparent 1px 4px),
-    radial-gradient(ellipse at 35% 0%, #28291f, #181a15 80%);
-}
-
-.scoreboard-heading,
-.scoreboard-date {
-  color: #dcc495;
-  text-align: center;
-  font: 500 clamp(.56rem, 1.1vw, .75rem)/1.3 var(--mono);
-  letter-spacing: .18em;
-  text-transform: uppercase;
-}
-
-.scoreboard-heading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-
-.scoreboard-heading span {
-  flex: 1;
-  height: 1px;
-  background: #6b5b3d;
-}
-
-.scoreboard-teams {
-  display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 1.55fr);
-  gap: clamp(8px, 1.5vw, 24px);
-  margin-block: clamp(16px, 3.1vw, 48px) clamp(14px, 2.45vw, 36px);
-  text-align: center;
-}
-
-.scoreboard-team + .scoreboard-team {
-  border-left: 1px solid #625336;
-  padding-left: clamp(8px, 1.5vw, 24px);
-}
-
-.scoreboard-team-name {
-  margin-bottom: 10px;
-  color: #f3e3be;
-  font: 700 clamp(.75rem, 1.65vw, 1.56rem)/1 var(--display);
-  letter-spacing: .11em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.scoreboard-score {
-  display: flex;
-  justify-content: center;
-  gap: 4px;
+.intro-heading {
+  margin-block: 8px 20px;
   color: #f6d89c;
-  font: 700 clamp(2.7rem, 8.4vw, 8.35rem)/.83 var(--display);
+  font: 800 clamp(88px, 14vw, 224px)/.82 var(--display);
+  letter-spacing: -.035em;
   font-variant-numeric: tabular-nums;
 }
 
-.score-digit {
-  display: grid;
-  place-items: center;
-  min-width: .56em;
-  padding: .045em .055em .15em;
-  border: 1px solid #564c35;
-  border-radius: 2px;
-  background: linear-gradient(180deg, #383324 0 49%, #211e16 49% 51%, #2b281e 51% 100%);
-  text-shadow: 0 2px #161711;
-  box-shadow: inset 0 1px #e4bc6e25, 0 2px #0d100c;
+.intro-game-story {
+  max-width: 36ch;
+  font-size: clamp(1rem, 1.55vw, 1.28rem);
+  line-height: 1.55;
 }
 
-.intro-footer {
-  z-index: 1;
+.intro-question {
+  margin-block: 14px 20px;
+  font-weight: 700;
+}
+
+.intro-photos {
+  display: grid;
+  gap: clamp(12px, 2svh, 24px);
+  justify-self: center;
+  width: min(100%, 510px);
+}
+
+.intro-photos figure {
+  min-width: 0;
+  padding: clamp(6px, 1vw, 12px);
+  border: 1px solid #ac946380;
+  background: #23271e;
+  box-shadow: 0 10px 28px #10140e40;
+}
+
+.intro-photos img {
+  width: 100%;
+  height: auto;
+}
+
+.intro-scroll .intro-photos figure:first-child img {
+  aspect-ratio: 2.35;
+  object-fit: cover;
+  object-position: center 65%;
+}
+
+.intro-photos figcaption {
   display: flex;
-  width: min(100%, var(--page-width));
-  margin-inline: auto;
-  padding: 17px var(--page-gutter) 24px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 3px 12px;
+  padding-top: 7px;
+  color: #e5d8b9;
+  font: 400 .68rem/1.45 var(--mono);
+}
+
+.intro-photos figcaption a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .explore-link {
@@ -415,6 +364,10 @@
   line-height: 1.55;
 }
 
+.story-overview-summary + .story-overview-summary {
+  margin-top: 14px;
+}
+
 .story-overview-lead {
   margin-block: 15px 22px;
   font-size: .94rem;
@@ -431,33 +384,18 @@
   border-color: #74603c;
 }
 
-.story-overview-portrait {
-  justify-self: center;
-  width: min(100%, 406px, 49svh);
-  padding: clamp(8px, 1.2vw, 16px);
-  border: 1px solid #b3a07c;
+.story-overview .intro-photos {
+  width: min(100%, 420px);
+}
+
+.story-overview .intro-photos figure {
+  border-color: #b3a07c;
   background: #faf4e3;
-  box-shadow: 0 12px 38px #5b482423;
+  box-shadow: 0 12px 28px #5b482423;
 }
 
-.story-overview-portrait img {
-  width: 100%;
-  height: auto;
-}
-
-.story-overview-portrait figcaption {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 2px 10px;
-  padding-top: 8px;
+.story-overview .intro-photos figcaption {
   color: #594930;
-  font: 400 .65rem/1.5 var(--mono);
-}
-
-.story-overview-portrait figcaption a {
-  text-decoration: underline;
-  text-underline-offset: 2px;
 }
 
 .era-before {
@@ -1141,50 +1079,34 @@ html:has(.event-dialog[open]) {
   gap: 7px;
 }
 
+@media (max-width: 760px), (max-height: 620px) {
+  .intro-scroll {
+    padding-bottom: 0;
+  }
+
+  .intro-scene {
+    position: relative;
+    top: auto;
+  }
+
+  .intro-copy {
+    transform: none;
+  }
+}
+
 @media (max-width: 760px) {
-  .intro-inner {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-    align-content: center;
-    gap: clamp(22px, 4.2svh, 38px);
-    padding-block: 25px 8px;
-  }
-
-  .intro-question {
-    max-width: 12ch;
-    margin-top: 10px;
-    font-size: clamp(54px, 11.5vw, 87px);
-  }
-
+  .intro-inner,
   .story-overview-inner {
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(16px, 3svh, 28px);
-    padding-block: clamp(22px, 5svh, 56px);
+    gap: clamp(24px, 4svh, 40px);
+  }
+
+  .intro-heading {
+    font-size: clamp(92px, 21vw, 140px);
   }
 
   .story-overview h1 {
     margin-bottom: 15px;
-  }
-
-  .story-overview-portrait {
-    width: min(100%, 224px, 30svh);
-  }
-
-  .intro-score {
-    width: min(100%, 480px);
-    justify-self: center;
-  }
-
-  .scoreboard-face {
-    padding-inline: clamp(11px, 4vw, 31px);
-  }
-
-  .scoreboard-score {
-    font-size: clamp(3.4rem, 13vw, 6.1rem);
-  }
-
-  .scoreboard-team-name {
-    font-size: clamp(.84rem, 3.15vw, 1.4rem);
   }
 
   .timeline-heading h2 {
@@ -1248,21 +1170,8 @@ html:has(.event-dialog[open]) {
     font-size: .75rem;
   }
 
-  .intro-footer {
-    padding-bottom: 16px;
-  }
-
-  .story-overview-inner {
-    gap: 14px;
-    padding-block: clamp(16px, 3svh, 28px);
-  }
-
   .story-overview h1 {
     font-size: clamp(42px, 14vw, 57px);
-  }
-
-  .story-overview-portrait {
-    width: min(100%, 186px, 24svh);
   }
 
   .timeline-scroll-hint {
@@ -1305,10 +1214,6 @@ html:has(.event-dialog[open]) {
 }
 
 @media (max-height: 620px) {
-  .intro-scroll {
-    --scene-height: max(440px, 100svh - var(--header-height));
-  }
-
   .event-card {
     width: clamp(120px, 32svh, 200px);
   }
@@ -1319,24 +1224,6 @@ html:has(.event-dialog[open]) {
 }
 
 @media (max-height: 460px) and (min-width: 580px) {
-  .intro-scroll {
-    --scene-height: max(300px, 100svh - var(--header-height));
-  }
-
-  .intro-inner {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr;
-    padding-block: 10px;
-  }
-
-  .intro-question {
-    font-size: min(8.5vw, 15svh);
-  }
-
-  .scoreboard-score {
-    font-size: min(8.4vw, 19svh);
-  }
-
   .timeline-era {
     font-size: min(9vw, 16svh);
   }
@@ -1358,12 +1245,7 @@ html:has(.event-dialog[open]) {
   }
 
   .field-yard-numbers,
-  .intro-copy,
-  .intro-score {
-    transform: none;
-  }
-
-  .scoreboard {
+  .intro-copy {
     transform: none;
   }
 
