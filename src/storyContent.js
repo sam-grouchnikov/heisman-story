@@ -28,11 +28,6 @@ import afterTech02 from './events/after-tech-02.js'
 import afterTech03 from './events/after-tech-03.js'
 import afterTech04 from './events/after-tech-04.js'
 import afterTech05 from './events/after-tech-05.js'
-import afterTech06 from './events/after-tech-06.js'
-import afterTech07 from './events/after-tech-07.js'
-import afterTech08 from './events/after-tech-08.js'
-import afterTech09 from './events/after-tech-09.js'
-import afterTech10 from './events/after-tech-10.js'
 
 export const introduction = {
   title: 'John Heisman',
@@ -92,11 +87,6 @@ export const chapters = [
       afterTech03,
       afterTech04,
       afterTech05,
-      afterTech06,
-      afterTech07,
-      afterTech08,
-      afterTech09,
-      afterTech10,
     ],
   },
 ]
