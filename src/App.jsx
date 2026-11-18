@@ -240,41 +240,108 @@ function projectArc(angle) {
 
 const readingScale = projectArc(firstCardAngle).scale
 const railPoints = Array.from({ length: 37 }, (_, i) => projectArc(trackEnd * i / 36))
-const railPath = (lane, points = railPoints) => points.map(({ y, halfWidth }) =>
-  `${(0.5 + lane * halfWidth) * 1000} ${y * 1000}`,
-).join(' L ')
-const trackShape = `M ${railPath(-1)} L ${railPath(1, [...railPoints].reverse())} Z`
+
+function fieldPoint({ y, halfWidth }, lane) {
+  return `${(0.5 + lane * halfWidth) * 1000} ${y * 1000}`
+}
+
+function railPath(lane, points) {
+  return points.map(point => fieldPoint(point, lane)).join(' L ')
+}
+
+function fieldSurface(points) {
+  return `M ${railPath(-1, points)} L ${railPath(1, [...points].reverse())} Z`
+}
+
+const trackShape = fieldSurface(railPoints)
+const firstEventYard = -5
+const lastEventYard = 105
+const yardsPerEvent = (lastEventYard - firstEventYard) / Math.max(1, lastEvent)
+const goalLines = [-10, 0, 100, 110]
+const yardLines = Array.from({ length: 19 }, (_, i) => (i + 1) * 5)
+const hashYards = Array.from({ length: 99 }, (_, i) => i + 1).filter(yard => yard % 5 !== 0)
+
+function eventYard(index) {
+  return firstEventYard + index * yardsPerEvent
+}
+
+const chapterLines = chapterStarts.slice(1).map(index => eventYard(index - .5))
+const fieldSections = [
+  { start: -10, end: 0, era: chapters[0].id, endZone: true },
+  ...chapters.map((chapter, index) => ({
+    start: chapterLines[index - 1] ?? 0,
+    end: chapterLines[index] ?? 100,
+    era: chapter.id,
+  })),
+  { start: 100, end: 110, era: chapters.at(-1).id, endZone: true },
+]
 
 function ReelTrack({ cards, position }) {
-  const tickSpacing = eventSpacing / 5
-  const tickPaths = []
-  for (let angle = (firstCardAngle - position * eventSpacing) % tickSpacing; angle < trackEnd; angle += tickSpacing) {
-    if (angle < 0) continue
-    const { y, halfWidth, scale } = projectArc(angle)
-    const left = (0.5 - halfWidth) * 1000
-    const right = (0.5 + halfWidth) * 1000
-    tickPaths.push(`M ${left} ${y * 1000} h ${-13 * scale} M ${right} ${y * 1000} h ${13 * scale}`)
+  const cameraYard = eventYard(position)
+  const angleAt = yard => firstCardAngle + (yard - cameraYard) * eventSpacing / yardsPerEvent
+  const isVisible = yard => angleAt(yard) >= 0 && angleAt(yard) <= trackEnd
+  const project = yard => projectArc(angleAt(yard))
+  const crossLine = (yard, left = -1, right = 1) => {
+    const point = project(yard)
+    return `M ${fieldPoint(point, left)} L ${fieldPoint(point, right)}`
   }
-  const markerPaths = cards.map(({ projection: { y, halfWidth, scale } }) =>
-    `M ${(0.5 - halfWidth - 0.042 * scale) * 1000} ${y * 1000} H ${(0.5 + halfWidth + 0.042 * scale) * 1000}`,
-  )
+  function surfaceBetween(start, end) {
+    const near = Math.max(0, angleAt(start))
+    const far = Math.min(trackEnd, angleAt(end))
+    if (near >= far) return undefined
+    const segments = Math.ceil((far - near) / .04)
+    const points = Array.from({ length: segments + 1 }, (_, i) => projectArc(near + (far - near) * i / segments))
+    return fieldSurface(points)
+  }
+
+  const visibleYardLines = yardLines.filter(isVisible)
+  const visibleGoalLines = goalLines.filter(isVisible)
+  const goal = isVisible(110) ? project(110) : null
+  const crossbar = goal && (goal.y - .09 * goal.scale) * 1000
+  const upright = goal && (goal.y - .22 * goal.scale) * 1000
+  const left = goal && (0.5 - .14 * goal.halfWidth) * 1000
+  const right = goal && (0.5 + .14 * goal.halfWidth) * 1000
+  const endZones = [{ yard: -7, label: 'START' }, { yard: 103, label: 'FINISH' }].filter(({ yard }) => isVisible(yard))
 
   return (
     <div className="reel-track" aria-hidden="true">
       <svg viewBox="0 0 1000 1000" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="reel-surface" x2="0" y2="1">
-            <stop className="reel-surface-top" />
-            <stop className="reel-surface-bottom" offset="1" />
-          </linearGradient>
-        </defs>
-        <path d={trackShape} fill="url(#reel-surface)" />
-        {[-1, -1 / 3, 1 / 3, 1].map(lane => (
-          <path key={lane} className={Math.abs(lane) === 1 ? 'reel-rail' : 'reel-lane'} d={`M ${railPath(lane)}`} />
+        <path className="reel-surface" d={trackShape} />
+        {fieldSections.map(({ start, end, era, endZone }) => (
+          <path key={start} className={`reel-turf era-${era}${endZone ? ' reel-end-zone' : ''}`} d={surfaceBetween(start, end)} />
         ))}
-        <path className="reel-ticks" d={tickPaths.join(' ')} />
-        <path className="reel-markers" d={markerPaths.join(' ')} />
+        {yardLines.filter(yard => yard % 10 === 5).map(yard => (
+          <path key={yard} className="reel-grass-stripe" d={surfaceBetween(yard - 5, yard)} />
+        ))}
+        <path className="reel-yard-lines" d={visibleYardLines.map(yard => crossLine(yard)).join(' ')} />
+        <path className="reel-hashes" d={hashYards.filter(isVisible).map(yard => (
+          crossLine(yard, -.98, -.92) + crossLine(yard, -.24, -.17) +
+          crossLine(yard, .17, .24) + crossLine(yard, .92, .98)
+        )).join(' ')} />
+        <path className="reel-goal-lines" d={visibleGoalLines.map(yard => crossLine(yard)).join(' ')} />
+        {goal && (
+          <path className="reel-goalpost" strokeWidth={3 * goal.scale} d={`M 500 ${goal.y * 1000} V ${crossbar} M ${left} ${upright} V ${crossbar} H ${right} V ${upright}`} />
+        )}
       </svg>
+      {visibleYardLines.filter(yard => yard % 10 === 0).map(yard => {
+        const { y, halfWidth, scale } = project(yard - 1)
+        return [-1, 1].map(side => (
+          <span key={yard * side} className="reel-yard-number" style={{
+            left: `${(0.5 + side * .75 * halfWidth) * 100}%`,
+            top: `${y * 100}%`,
+            '--marker-scale': scale / readingScale,
+          }}>{Math.min(yard, 100 - yard)}</span>
+        ))
+      })}
+      {endZones.map(({ yard, label }) => {
+        const { y, scale } = project(yard)
+        return (
+          <span key={label} className="reel-end-zone-label" style={{
+            top: `${y * 100}%`,
+            '--marker-scale': scale / readingScale,
+          }}>{label}</span>
+        )
+      })}
       <div className="reel-dates">
         {cards.map(({ event, index, projection: { y, halfWidth, scale } }) => (
           <span key={index} style={{
@@ -457,7 +524,7 @@ function Timeline() {
           <div className="timeline-controls-inner">
             <nav className="chapter-nav" aria-label="Timeline chapters">
               {chapters.map((chapter, index) => (
-                <button key={chapter.id} type="button" aria-current={current.chapter === chapter ? 'step' : undefined} onClick={() => goToEvent(chapterStarts[index])}>
+                <button key={chapter.id} className={`era-${chapter.id}`} type="button" aria-current={current.chapter === chapter ? 'step' : undefined} onClick={() => goToEvent(chapterStarts[index])}>
                   <span className="chapter-dot" />{chapter.title}
                 </button>
               ))}
