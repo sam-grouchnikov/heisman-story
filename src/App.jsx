@@ -419,7 +419,7 @@ function EventCard({ card, active, onOpen }) {
         </div>
         {event.summary.description && (
           <p className="event-card-preview">
-            {event.summary.description}<CitationRefs numbers={event.summary.previewCitations} linked={false} />
+            <CitationRefs numbers={event.summary.previewCitations} linked={false} /> {event.summary.description}
           </p>
         )}
       </div>

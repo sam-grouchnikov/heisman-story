@@ -2,13 +2,14 @@ export default {
   summary: {
     title: 'A Flash That Changed Everything',
     date: '1892',
+    citations: [28, 33],
     image: '/images/madison-square-garden.jpg',
     imageAlt: 'Describe what the photo shows',
   },
   content: [
     { type: 'heading', text: 'Madison Square Garden' },
-    { type: 'paragraph', text: 'In 1892, John Heisman was playing football for the University of Pennsylvania in an indoor game at Madison Square Garden. A flash from the Garden\'s chemically produced electrical lighting system caused him permanent eye damage, and Penn\'s team doctors advised him to rest his eyes for two years.' },
+    { type: 'paragraph', text: 'Accounts differ on how Heisman injured his eyes while at Penn. Pat Edwards attributed the injury to the lighting at an indoor football game. The Heisman Trophy Trust’s biography attributes it to a nearby lightning strike.', citations: [6, 19, 32, 33] },
     { type: 'heading', text: 'A New Path' },
-    { type: 'paragraph', text: 'Heisman graduated with his law degree that spring but decided not to use it. Instead, he shifted his career toward coaching various sports.' },
+    { type: 'paragraph', text: 'Heisman earned his law degree in 1892 and turned to coaching.', citations: [28, 32] },
   ],
 }

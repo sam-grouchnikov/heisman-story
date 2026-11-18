@@ -137,11 +137,19 @@ export const chapters = [
 
 // Context citations support what an image shows when its original credit is unknown.
 export const imageCitations = {
+  '/images/heisman-birthplace.avif': { numbers: [34], context: true },
+  '/images/heisman-1887-salutatorian.png': { numbers: [31, 33], context: true },
+  '/images/heisman-upenn-1890.png': { numbers: [28, 31], context: true },
+  '/images/heisman-oberlin-1892.png': { numbers: [31], credit: 'Oberlin College Archives' },
+  '/images/heisman-auburn-1896.png': { numbers: [35, 40], context: true },
+  '/images/heisman-clemson-1901.jpg': { numbers: [38], credit: '1901 Clemsonian' },
+  '/images/heisman-clemson-1902-team.png': { numbers: [39], credit: '1903 Oconeean' },
+  '/images/heisman-play-handbill.png': { numbers: [37], credit: 'Alabama Heritage via The War Eagle Reader' },
   '/images/john-heisman-georgia-tech.jpg': { numbers: [5], context: true },
   '/images/georgia-tech-football-team-1916.jpg': { numbers: [25], context: true },
-  '/images/heisman-fetzer-elcock.jpg': { numbers: [5], context: true },
-  '/images/georgia-tech-baseball-team-1906.jpg': { numbers: [5], credit: 'Georgia Archives' },
-  '/images/heisman-yellow-jackets-clipping.jpg': { numbers: [5, 8], context: true },
+  '/images/heisman-fetzer-elcock.jpg': { numbers: [25], context: true },
+  '/images/georgia-tech-baseball-team-1906.jpg': { numbers: [2, 5], context: true },
+  '/images/heisman-yellow-jackets-clipping.jpg': { numbers: [5], context: true },
   '/images/cumberland-game-1916.jpg': { numbers: [21], credit: 'Georgia Tech Archives' },
   '/images/cumberland-scoreboard-project-plan.jpg': { numbers: [22], context: true },
   '/images/Football Team at Penn coached by Heisman.png': { numbers: [19, 28], context: true },

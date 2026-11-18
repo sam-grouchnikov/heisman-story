@@ -780,6 +780,10 @@ a.timeline-scroll-hint:hover {
   overflow-wrap: anywhere;
 }
 
+.event-card-preview .citation-refs {
+  margin-inline-start: 0;
+}
+
 .timeline-controls {
   color: var(--cream);
   background: #141822;
