@@ -11,6 +11,10 @@ import beforeTech07 from './events/before-tech-07.js'
 import beforeTech08 from './events/before-tech-08.js'
 import beforeTech09 from './events/before-tech-09.js'
 import beforeTech10 from './events/before-tech-10.js'
+import beforeTech11 from './events/before-tech-11.js'
+import beforeTech12 from './events/before-tech-12.js'
+import beforeTech13 from './events/before-tech-13.js'
+import beforeTech14 from './events/before-tech-14.js'
 
 import duringTech01 from './events/during-tech-01.js'
 import duringTech02 from './events/during-tech-02.js'
@@ -63,6 +67,10 @@ export const chapters = [
       beforeTech08,
       beforeTech09,
       beforeTech10,
+      beforeTech11,
+      beforeTech12,
+      beforeTech13,
+      beforeTech14,
     ],
   },
   {
