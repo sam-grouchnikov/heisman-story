@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { chapters, introduction, worksCited } from './storyContent'
+import { chapters, imageCitations, introduction, worksCited } from './storyContent'
 import './App.css'
 
 const events = chapters.flatMap(chapter =>
@@ -42,6 +42,36 @@ function legacyEventContent(event) {
 
 function eventImageSource(src) {
   return src.startsWith('/images/') ? `${import.meta.env.BASE_URL}${src.slice(1)}` : src
+}
+
+function CitationRefs({ numbers, linked = true }) {
+  if (!numbers?.length) return null
+
+  return (
+    <span className="citation-refs">
+      {numbers.map(number => linked
+        ? <a key={number} href={`#source-${number}`} aria-label={`Works Cited source ${number}`}
+            onClick={event => {
+              if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+                event.currentTarget.closest('dialog')?.close()
+              }
+            }}>[{number}]</a>
+        : <span key={number}>[{number}]</span>)}
+    </span>
+  )
+}
+
+function ImageCitation({ src, linked = true }) {
+  const citation = imageCitations[src]
+  if (!citation) return null
+
+  return (
+    <span className="image-citation">
+      {citation.context ? 'Context' : citation.credit || 'Image source'}
+      <CitationRefs numbers={citation.numbers} linked={linked} />
+      {citation.context && linked && <span> · Image credit unverified</span>}
+    </span>
+  )
 }
 
 function Icon({ name, size = 20 }) {
@@ -120,12 +150,12 @@ function Field({ motion = 0, className = '' }) {
 function IntroPhotos({ photos, lazy = false }) {
   return (
     <div className="intro-photos">
-      {photos.map(({ src, width, height, alt, caption, credit, source }) => (
+      {photos.map(({ src, width, height, alt, caption, credit, citations }) => (
         <figure key={src}>
           <img src={eventImageSource(src)} alt={alt} width={width} height={height} loading={lazy ? 'lazy' : 'eager'} />
           <figcaption>
             <span>{caption}</span>
-            <a href={source}>{credit}</a>
+            <span>{credit}<CitationRefs numbers={citations} /></span>
           </figcaption>
         </figure>
       ))}
@@ -146,7 +176,7 @@ function Introduction() {
           <div className="intro-copy">
             <p className="intro-location"><span />{introduction.location}</p>
             <h2 id="hook-title" className="intro-heading">{introduction.heading}</h2>
-            <p className="intro-game-story">{introduction.gameStory}</p>
+            <p className="intro-game-story">{introduction.gameStory}<CitationRefs numbers={introduction.gameCitations} /></p>
             <p className="intro-question">{introduction.question}</p>
             <a className="explore-link" href="#overview"><Icon name="down" size={17} /> Meet the coach</a>
           </div>
@@ -198,10 +228,12 @@ function Overview() {
         <div className="story-overview-copy">
           <p className="section-label"><span />{introduction.subtitle}</p>
           <h1 id="overview-title">{introduction.title}</h1>
-          {introduction.description.map(paragraph => (
-            <p key={paragraph} className="story-overview-summary">{paragraph}</p>
+          {introduction.description.map((paragraph, index) => (
+            <p key={paragraph} className="story-overview-summary">
+              {paragraph}<CitationRefs numbers={introduction.descriptionCitations[index]} />
+            </p>
           ))}
-          <p className="story-overview-lead">{introduction.lead}</p>
+          <p className="story-overview-lead">{introduction.lead}<CitationRefs numbers={introduction.leadCitations} /></p>
           <a className="explore-link" href="#timeline"><Icon name="down" size={17} /> Explore the timeline</a>
         </div>
         <IntroPhotos photos={introduction.overviewPhotos} lazy />
@@ -379,10 +411,17 @@ function EventCard({ card, active, onOpen }) {
     >
       <span className="event-card-era">{event.chapter.title}</span>
       <EventCardImage image={event.summary.image} imageAlt={event.summary.imageAlt} />
+      <ImageCitation src={event.summary.image} linked={false} />
       <div className="event-card-copy">
         <div className="event-card-title">{event.title}</div>
-        <div className="event-date">{event.date || 'Date placeholder'}</div>
-        {event.summary.description && <p className="event-card-preview">{event.summary.description}</p>}
+        <div className="event-date">
+          {event.date || 'Date placeholder'}<CitationRefs numbers={event.summary.citations} linked={false} />
+        </div>
+        {event.summary.description && (
+          <p className="event-card-preview">
+            {event.summary.description}<CitationRefs numbers={event.summary.previewCitations} linked={false} />
+          </p>
+        )}
       </div>
     </button>
   )
@@ -393,12 +432,22 @@ function EventContentBlock({ block }) {
     case 'heading':
       return <h3>{block.text}</h3>
     case 'paragraph':
-      return <p>{block.text}</p>
+      return (
+        <p>
+          {block.text}<CitationRefs numbers={block.citations} />
+          {block.citationNote && <span className="citation-note"> [{block.citationNote}]</span>}
+        </p>
+      )
     case 'image':
       return (
         <figure className={block.wide ? 'event-detail-image is-wide' : 'event-detail-image'}>
           <img src={eventImageSource(block.src)} alt={block.alt || ''} loading="lazy" />
-          {block.caption && <figcaption>{block.caption}</figcaption>}
+          {(block.caption || imageCitations[block.src]) && (
+            <figcaption>
+              {block.caption && <span>{block.caption}</span>}
+              <ImageCitation src={block.src} />
+            </figcaption>
+          )}
         </figure>
       )
     default:
@@ -407,6 +456,9 @@ function EventContentBlock({ block }) {
 }
 
 function EventDialog({ event, dialogRef, onClose }) {
+  const cover = event?.summary.image
+  const showCover = imageCitations[cover] && !event.content.some(block => block.src === cover)
+
   return (
     <dialog
       className={`event-dialog era-${event?.chapter.id || chapters[0].id}`}
@@ -426,12 +478,17 @@ function EventDialog({ event, dialogRef, onClose }) {
           </header>
           <div className="event-detail-copy">
             <div className="event-detail-title">
-              {event.date && <div className="event-date">{event.date}</div>}
+              {event.date && (
+                <div className="event-date">{event.date}<CitationRefs numbers={event.summary.citations} /></div>
+              )}
               <h2 id="event-dialog-title">{event.title}</h2>
             </div>
             {event.content.length
               ? event.content.map((block, index) => <EventContentBlock key={index} block={block} />)
               : <p>[Add the story for this event.]</p>}
+            {showCover && (
+              <EventContentBlock block={{ type: 'image', src: cover, alt: event.summary.imageAlt, caption: event.summary.imageAlt }} />
+            )}
           </div>
         </article>
       )}
@@ -568,14 +625,17 @@ function WorksCited() {
           <div className="section-label"><span /> MLA format</div>
           <h2 id="works-cited-title">Works Cited</h2>
         </div>
-        <ul className="citation-list">
-          {worksCited.map(({ type, entry, container, details }, index) => (
-            <li key={index}>
-              {type && <div className="citation-type">{type}</div>}
-              <p>{entry} <cite>{container}</cite>{details}</p>
+        <ol className="citation-list" role="list">
+          {worksCited.map(({ number, entry, container, details, url }) => (
+            <li key={number} id={`source-${number}`} tabIndex={-1}>
+              <span className="citation-number">[{number}]</span>
+              <p>
+                {entry && `${entry} `}<cite>{container}</cite>{details}
+                {url && <> <a href={url} aria-label={`Open source ${number}: ${entry || container}`}>View source</a></>}
+              </p>
             </li>
           ))}
-        </ul>
+        </ol>
       </div>
     </section>
   )

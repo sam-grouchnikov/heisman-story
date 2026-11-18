@@ -713,6 +713,12 @@ a.timeline-scroll-hint:hover {
   background: #242620;
 }
 
+.event-card > .image-citation {
+  display: block;
+  padding: 3px 10px;
+  font: 500 .65rem/1.25 var(--mono);
+}
+
 .event-card-image-placeholder {
   position: relative;
   display: grid;
@@ -1033,6 +1039,31 @@ html:has(.event-dialog[open]) {
   text-align: center;
 }
 
+.event-detail-image .image-citation {
+  display: block;
+  margin-top: 4px;
+  font-size: .8rem;
+}
+
+.citation-refs {
+  display: inline-flex;
+  gap: .25em;
+  margin-inline-start: .35em;
+  font: 600 .75em/1 var(--mono);
+  white-space: nowrap;
+}
+
+.citation-refs a,
+.citation-list a {
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+.citation-note {
+  font-size: .8em;
+  font-style: italic;
+}
+
 .works-cited {
   min-height: calc(100dvh - var(--footer-height));
   color: var(--ink);
@@ -1070,16 +1101,21 @@ html:has(.event-dialog[open]) {
 }
 
 .citation-list li {
+  display: grid;
+  grid-template-columns: 3ch minmax(0, 1fr);
+  gap: 1em;
   padding-block: 16px 18px;
   border-bottom: 1px solid #ab9b78;
+  scroll-margin-top: calc(var(--header-height) + 12px);
 }
 
-.citation-type {
-  margin-bottom: 5px;
+.citation-list li:target {
+  background: #e7dbc1;
+}
+
+.citation-number {
   color: #705028;
-  font: 500 .73rem/1.4 var(--mono);
-  letter-spacing: .07em;
-  text-transform: uppercase;
+  font: 600 .85rem/1.65 var(--mono);
 }
 
 .citation-list p {
