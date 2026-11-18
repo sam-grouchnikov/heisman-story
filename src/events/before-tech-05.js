@@ -2,7 +2,7 @@ export default {
   summary: {
     title: 'A Flash That Changed Everything',
     date: '1892',
-    image: '/images/placeholder-event-1.png',
+    image: '/images/madison-square-garden.jpg',
     imageAlt: 'Describe what the photo shows',
   },
   content: [

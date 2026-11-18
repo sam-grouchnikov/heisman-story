@@ -2,7 +2,7 @@ export default {
   summary: {
     title: 'Heisman at Clemson',
     date: '1900',
-    image: '/images/heisman-clemson-1901.png',
+    image: '/images/heisman-clemson-1901.jpg',
     imageAlt: 'John Heisman at Clemson in 1901',
   },
   content: [

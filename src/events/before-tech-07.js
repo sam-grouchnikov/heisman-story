@@ -2,7 +2,7 @@ export default {
   summary: {
     title: 'Buchtel College and Back to Oberlin',
     date: '1893-1894',
-    image: '/images/placeholder-event-1.png',
+    image: '/images/heisman-oberlin.png',
     imageAlt: 'Describe what the photo shows',
   },
   content: [

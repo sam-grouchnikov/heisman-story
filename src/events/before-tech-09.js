@@ -2,7 +2,7 @@ export default {
   summary: {
     title: 'Pushing for the Forward Pass',
     date: 'c. 1895',
-    image: '/images/placeholder-event-1.png',
+    image: '/images/forward-pass.avif',
     imageAlt: 'Describe what the photo shows',
   },
   content: [
