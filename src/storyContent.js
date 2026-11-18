@@ -18,10 +18,6 @@ import duringTech03 from './events/during-tech-03.js'
 import duringTech04 from './events/during-tech-04.js'
 import duringTech05 from './events/during-tech-05.js'
 import duringTech06 from './events/during-tech-06.js'
-import duringTech07 from './events/during-tech-07.js'
-import duringTech08 from './events/during-tech-08.js'
-import duringTech09 from './events/during-tech-09.js'
-import duringTech10 from './events/during-tech-10.js'
 
 import afterTech01 from './events/after-tech-01.js'
 import afterTech02 from './events/after-tech-02.js'
@@ -29,7 +25,7 @@ import afterTech03 from './events/after-tech-03.js'
 import afterTech04 from './events/after-tech-04.js'
 import afterTech05 from './events/after-tech-05.js'
 
-const historyPhotoSource = 'https://www.history.com/articles/john-heisman-coach-college-football-trophy'
+export { worksCited } from './worksCited.js'
 
 export const introduction = {
   title: 'John Heisman',
@@ -37,12 +33,15 @@ export const introduction = {
   location: 'Grant Field · Atlanta',
   heading: '222–0',
   gameStory: 'On October 7, 1916, the Georgia Tech Golden Tornadoes beat Cumberland by a margin that still stands as the largest in college football history.',
+  gameCitations: [5, 22],
   question: 'Who coached Georgia Tech that day?',
   description: [
     'Every year, the Heisman Trophy goes to an outstanding college football player. It took John Heisman’s name after his death in 1936, honoring a coach who had already changed how the game was played.',
     'Heisman coached at Georgia Tech from 1904 to 1919. He pressed for the rule change that legalized the forward pass in 1906 and led Georgia Tech to its first national championship in 1917.',
   ],
+  descriptionCitations: [[6, 27], [5, 6]],
   lead: 'The story begins in the fall of 1869, when Heisman was born in Cleveland, Ohio.',
+  leadCitations: [5],
   gamePhotos: [
     {
       src: '/images/cumberland-game-1916.jpg',
@@ -51,7 +50,7 @@ export const introduction = {
       alt: 'Football players gather around a tackle at Grant Field',
       caption: 'Georgia Tech vs. Cumberland, 1916',
       credit: 'Georgia Tech Archives',
-      source: 'https://repository.gatech.edu/bitstreams/5a059260-e64e-490e-b989-7df0b8c51a7e/download',
+      citations: [21],
     },
     {
       src: '/images/cumberland-scoreboard-1916.jpg',
@@ -60,7 +59,7 @@ export const introduction = {
       alt: 'Scoreboard showing Georgia Tech scoring 63, 63, 54 and 42 by quarter for a total of 222, with Cumberland at zero',
       caption: 'The final score',
       credit: 'From The Rumble Seat',
-      source: 'https://www.fromtherumbleseat.com/2011/10/7/2475194/95-years-ago-today-georgia-tech-defeated-cumberland-222-0',
+      citations: [22],
     },
   ],
   overviewPhotos: [
@@ -71,7 +70,7 @@ export const introduction = {
       alt: 'Black-and-white portrait of John Heisman in a dark athletic shirt',
       caption: 'John Heisman',
       credit: 'Collegiate Images / Getty Images',
-      source: historyPhotoSource,
+      citations: [23],
     },
     {
       src: '/images/heisman-memorial-trophy.jpg',
@@ -80,7 +79,7 @@ export const introduction = {
       alt: 'The bronze Heisman Trophy depicts a football player with one arm extended',
       caption: 'The Heisman Memorial Trophy',
       credit: 'Kelly Kline / Heisman Trophy Trust / Getty Images',
-      source: historyPhotoSource,
+      citations: [23],
     },
   ],
 }
@@ -114,10 +113,6 @@ export const chapters = [
       duringTech04,
       duringTech05,
       duringTech06,
-      duringTech07,
-      duringTech08,
-      duringTech09,
-      duringTech10,
     ],
   },
   {
@@ -134,25 +129,18 @@ export const chapters = [
   },
 ]
 
-// Replace the templates with the entries for the sources your team actually uses.
-// The container field appears in italics.
-export const worksCited = [
-  {
-    type: 'Web page',
-    entry: '[Last Name, First Name]. “[Title of Page].”',
-    container: '[Website Name]',
-    details: ', [Publisher], [Day Mon. Year], [URL].',
-  },
-  {
-    type: 'Journal article',
-    entry: '[Last Name, First Name]. “[Article Title].”',
-    container: '[Journal Title]',
-    details: ', vol. [#], no. [#], [Year], pp. [##–##]. [DOI or URL].',
-  },
-  {
-    type: 'Archival photograph',
-    entry: '[Creator Last Name, First Name]. “[Photograph Title].” [Day Mon. Year].',
-    container: '[Collection Name]',
-    details: ', [Box or Identifier], [Archive or Repository], [URL].',
-  },
-]
+// Context citations support what an image shows when its original credit is unknown.
+export const imageCitations = {
+  '/images/john-heisman-georgia-tech.jpg': { numbers: [5], context: true },
+  '/images/georgia-tech-football-team-1916.jpg': { numbers: [25], context: true },
+  '/images/heisman-fetzer-elcock.jpg': { numbers: [5], context: true },
+  '/images/georgia-tech-baseball-team-1906.jpg': { numbers: [5], credit: 'Georgia Archives' },
+  '/images/heisman-yellow-jackets-clipping.jpg': { numbers: [5, 8], context: true },
+  '/images/cumberland-game-1916.jpg': { numbers: [21], credit: 'Georgia Tech Archives' },
+  '/images/cumberland-scoreboard-project-plan.jpg': { numbers: [22], context: true },
+  '/images/Football Team at Penn coached by Heisman.png': { numbers: [19, 28], context: true },
+  '/images/“Principles of Football” by John Heisman.png': { numbers: [30], context: true },
+  '/images/Heisman Gym.png': { numbers: [15], context: true },
+  '/images/Heisman’s Grave.png': { numbers: [3], context: true },
+  '/images/Heisman Trophy.png': { numbers: [27], context: true },
+}

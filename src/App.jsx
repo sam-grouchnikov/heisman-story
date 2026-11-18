@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { chapters, introduction, worksCited } from './storyContent'
+import { chapters, imageCitations, introduction, worksCited } from './storyContent'
 import './App.css'
 
 const events = chapters.flatMap(chapter =>
@@ -42,6 +42,36 @@ function legacyEventContent(event) {
 
 function eventImageSource(src) {
   return src.startsWith('/images/') ? `${import.meta.env.BASE_URL}${src.slice(1)}` : src
+}
+
+function CitationRefs({ numbers, linked = true }) {
+  if (!numbers?.length) return null
+
+  return (
+    <span className="citation-refs">
+      {numbers.map(number => linked
+        ? <a key={number} href={`#source-${number}`} aria-label={`Works Cited source ${number}`}
+            onClick={event => {
+              if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+                event.currentTarget.closest('dialog')?.close()
+              }
+            }}>[{number}]</a>
+        : <span key={number}>[{number}]</span>)}
+    </span>
+  )
+}
+
+function ImageCitation({ src, linked = true }) {
+  const citation = imageCitations[src]
+  if (!citation) return null
+
+  return (
+    <span className="image-citation">
+      {citation.context ? 'Context' : citation.credit || 'Image source'}
+      <CitationRefs numbers={citation.numbers} linked={linked} />
+      {citation.context && linked && <span> · Image credit unverified</span>}
+    </span>
+  )
 }
 
 function Icon({ name, size = 20 }) {
@@ -120,12 +150,12 @@ function Field({ motion = 0, className = '' }) {
 function IntroPhotos({ photos, lazy = false }) {
   return (
     <div className="intro-photos">
-      {photos.map(({ src, width, height, alt, caption, credit, source }) => (
+      {photos.map(({ src, width, height, alt, caption, credit, citations }) => (
         <figure key={src}>
           <img src={eventImageSource(src)} alt={alt} width={width} height={height} loading={lazy ? 'lazy' : 'eager'} />
           <figcaption>
             <span>{caption}</span>
-            <a href={source}>{credit}</a>
+            <span>{credit}<CitationRefs numbers={citations} /></span>
           </figcaption>
         </figure>
       ))}
@@ -146,7 +176,7 @@ function Introduction() {
           <div className="intro-copy">
             <p className="intro-location"><span />{introduction.location}</p>
             <h2 id="hook-title" className="intro-heading">{introduction.heading}</h2>
-            <p className="intro-game-story">{introduction.gameStory}</p>
+            <p className="intro-game-story">{introduction.gameStory}<CitationRefs numbers={introduction.gameCitations} /></p>
             <p className="intro-question">{introduction.question}</p>
             <a className="explore-link" href="#overview"><Icon name="down" size={17} /> Meet the coach</a>
           </div>
@@ -198,10 +228,12 @@ function Overview() {
         <div className="story-overview-copy">
           <p className="section-label"><span />{introduction.subtitle}</p>
           <h1 id="overview-title">{introduction.title}</h1>
-          {introduction.description.map(paragraph => (
-            <p key={paragraph} className="story-overview-summary">{paragraph}</p>
+          {introduction.description.map((paragraph, index) => (
+            <p key={paragraph} className="story-overview-summary">
+              {paragraph}<CitationRefs numbers={introduction.descriptionCitations[index]} />
+            </p>
           ))}
-          <p className="story-overview-lead">{introduction.lead}</p>
+          <p className="story-overview-lead">{introduction.lead}<CitationRefs numbers={introduction.leadCitations} /></p>
           <a className="explore-link" href="#timeline"><Icon name="down" size={17} /> Explore the timeline</a>
         </div>
         <IntroPhotos photos={introduction.overviewPhotos} lazy />
@@ -240,41 +272,108 @@ function projectArc(angle) {
 
 const readingScale = projectArc(firstCardAngle).scale
 const railPoints = Array.from({ length: 37 }, (_, i) => projectArc(trackEnd * i / 36))
-const railPath = (lane, points = railPoints) => points.map(({ y, halfWidth }) =>
-  `${(0.5 + lane * halfWidth) * 1000} ${y * 1000}`,
-).join(' L ')
-const trackShape = `M ${railPath(-1)} L ${railPath(1, [...railPoints].reverse())} Z`
+
+function fieldPoint({ y, halfWidth }, lane) {
+  return `${(0.5 + lane * halfWidth) * 1000} ${y * 1000}`
+}
+
+function railPath(lane, points) {
+  return points.map(point => fieldPoint(point, lane)).join(' L ')
+}
+
+function fieldSurface(points) {
+  return `M ${railPath(-1, points)} L ${railPath(1, [...points].reverse())} Z`
+}
+
+const trackShape = fieldSurface(railPoints)
+const firstEventYard = -5
+const lastEventYard = 105
+const yardsPerEvent = (lastEventYard - firstEventYard) / Math.max(1, lastEvent)
+const goalLines = [-10, 0, 100, 110]
+const yardLines = Array.from({ length: 19 }, (_, i) => (i + 1) * 5)
+const hashYards = Array.from({ length: 99 }, (_, i) => i + 1).filter(yard => yard % 5 !== 0)
+
+function eventYard(index) {
+  return firstEventYard + index * yardsPerEvent
+}
+
+const chapterLines = chapterStarts.slice(1).map(index => eventYard(index - .5))
+const fieldSections = [
+  { start: -10, end: 0, era: chapters[0].id, endZone: true },
+  ...chapters.map((chapter, index) => ({
+    start: chapterLines[index - 1] ?? 0,
+    end: chapterLines[index] ?? 100,
+    era: chapter.id,
+  })),
+  { start: 100, end: 110, era: chapters.at(-1).id, endZone: true },
+]
 
 function ReelTrack({ cards, position }) {
-  const tickSpacing = eventSpacing / 5
-  const tickPaths = []
-  for (let angle = (firstCardAngle - position * eventSpacing) % tickSpacing; angle < trackEnd; angle += tickSpacing) {
-    if (angle < 0) continue
-    const { y, halfWidth, scale } = projectArc(angle)
-    const left = (0.5 - halfWidth) * 1000
-    const right = (0.5 + halfWidth) * 1000
-    tickPaths.push(`M ${left} ${y * 1000} h ${-13 * scale} M ${right} ${y * 1000} h ${13 * scale}`)
+  const cameraYard = eventYard(position)
+  const angleAt = yard => firstCardAngle + (yard - cameraYard) * eventSpacing / yardsPerEvent
+  const isVisible = yard => angleAt(yard) >= 0 && angleAt(yard) <= trackEnd
+  const project = yard => projectArc(angleAt(yard))
+  const crossLine = (yard, left = -1, right = 1) => {
+    const point = project(yard)
+    return `M ${fieldPoint(point, left)} L ${fieldPoint(point, right)}`
   }
-  const markerPaths = cards.map(({ projection: { y, halfWidth, scale } }) =>
-    `M ${(0.5 - halfWidth - 0.042 * scale) * 1000} ${y * 1000} H ${(0.5 + halfWidth + 0.042 * scale) * 1000}`,
-  )
+  function surfaceBetween(start, end) {
+    const near = Math.max(0, angleAt(start))
+    const far = Math.min(trackEnd, angleAt(end))
+    if (near >= far) return undefined
+    const segments = Math.ceil((far - near) / .04)
+    const points = Array.from({ length: segments + 1 }, (_, i) => projectArc(near + (far - near) * i / segments))
+    return fieldSurface(points)
+  }
+
+  const visibleYardLines = yardLines.filter(isVisible)
+  const visibleGoalLines = goalLines.filter(isVisible)
+  const goal = isVisible(110) ? project(110) : null
+  const crossbar = goal && (goal.y - .09 * goal.scale) * 1000
+  const upright = goal && (goal.y - .22 * goal.scale) * 1000
+  const left = goal && (0.5 - .14 * goal.halfWidth) * 1000
+  const right = goal && (0.5 + .14 * goal.halfWidth) * 1000
+  const endZones = [{ yard: -7, label: 'START' }, { yard: 103, label: 'FINISH' }].filter(({ yard }) => isVisible(yard))
 
   return (
     <div className="reel-track" aria-hidden="true">
       <svg viewBox="0 0 1000 1000" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="reel-surface" x2="0" y2="1">
-            <stop className="reel-surface-top" />
-            <stop className="reel-surface-bottom" offset="1" />
-          </linearGradient>
-        </defs>
-        <path d={trackShape} fill="url(#reel-surface)" />
-        {[-1, -1 / 3, 1 / 3, 1].map(lane => (
-          <path key={lane} className={Math.abs(lane) === 1 ? 'reel-rail' : 'reel-lane'} d={`M ${railPath(lane)}`} />
+        <path className="reel-surface" d={trackShape} />
+        {fieldSections.map(({ start, end, era, endZone }) => (
+          <path key={start} className={`reel-turf era-${era}${endZone ? ' reel-end-zone' : ''}`} d={surfaceBetween(start, end)} />
         ))}
-        <path className="reel-ticks" d={tickPaths.join(' ')} />
-        <path className="reel-markers" d={markerPaths.join(' ')} />
+        {yardLines.filter(yard => yard % 10 === 5).map(yard => (
+          <path key={yard} className="reel-grass-stripe" d={surfaceBetween(yard - 5, yard)} />
+        ))}
+        <path className="reel-yard-lines" d={visibleYardLines.map(yard => crossLine(yard)).join(' ')} />
+        <path className="reel-hashes" d={hashYards.filter(isVisible).map(yard => (
+          crossLine(yard, -.98, -.92) + crossLine(yard, -.24, -.17) +
+          crossLine(yard, .17, .24) + crossLine(yard, .92, .98)
+        )).join(' ')} />
+        <path className="reel-goal-lines" d={visibleGoalLines.map(yard => crossLine(yard)).join(' ')} />
+        {goal && (
+          <path className="reel-goalpost" strokeWidth={3 * goal.scale} d={`M 500 ${goal.y * 1000} V ${crossbar} M ${left} ${upright} V ${crossbar} H ${right} V ${upright}`} />
+        )}
       </svg>
+      {visibleYardLines.filter(yard => yard % 10 === 0).map(yard => {
+        const { y, halfWidth, scale } = project(yard - 1)
+        return [-1, 1].map(side => (
+          <span key={yard * side} className="reel-yard-number" style={{
+            left: `${(0.5 + side * .75 * halfWidth) * 100}%`,
+            top: `${y * 100}%`,
+            '--marker-scale': scale / readingScale,
+          }}>{Math.min(yard, 100 - yard)}</span>
+        ))
+      })}
+      {endZones.map(({ yard, label }) => {
+        const { y, scale } = project(yard)
+        return (
+          <span key={label} className="reel-end-zone-label" style={{
+            top: `${y * 100}%`,
+            '--marker-scale': scale / readingScale,
+          }}>{label}</span>
+        )
+      })}
       <div className="reel-dates">
         {cards.map(({ event, index, projection: { y, halfWidth, scale } }) => (
           <span key={index} style={{
@@ -312,10 +411,17 @@ function EventCard({ card, active, onOpen }) {
     >
       <span className="event-card-era">{event.chapter.title}</span>
       <EventCardImage image={event.summary.image} imageAlt={event.summary.imageAlt} />
+      <ImageCitation src={event.summary.image} linked={false} />
       <div className="event-card-copy">
         <div className="event-card-title">{event.title}</div>
-        <div className="event-date">{event.date || 'Date placeholder'}</div>
-        {event.summary.description && <p className="event-card-preview">{event.summary.description}</p>}
+        <div className="event-date">
+          {event.date || 'Date placeholder'}<CitationRefs numbers={event.summary.citations} linked={false} />
+        </div>
+        {event.summary.description && (
+          <p className="event-card-preview">
+            {event.summary.description}<CitationRefs numbers={event.summary.previewCitations} linked={false} />
+          </p>
+        )}
       </div>
     </button>
   )
@@ -326,12 +432,22 @@ function EventContentBlock({ block }) {
     case 'heading':
       return <h3>{block.text}</h3>
     case 'paragraph':
-      return <p>{block.text}</p>
+      return (
+        <p>
+          {block.text}<CitationRefs numbers={block.citations} />
+          {block.citationNote && <span className="citation-note"> [{block.citationNote}]</span>}
+        </p>
+      )
     case 'image':
       return (
         <figure className={block.wide ? 'event-detail-image is-wide' : 'event-detail-image'}>
           <img src={eventImageSource(block.src)} alt={block.alt || ''} loading="lazy" />
-          {block.caption && <figcaption>{block.caption}</figcaption>}
+          {(block.caption || imageCitations[block.src]) && (
+            <figcaption>
+              {block.caption && <span>{block.caption}</span>}
+              <ImageCitation src={block.src} />
+            </figcaption>
+          )}
         </figure>
       )
     default:
@@ -340,6 +456,9 @@ function EventContentBlock({ block }) {
 }
 
 function EventDialog({ event, dialogRef, onClose }) {
+  const cover = event?.summary.image
+  const showCover = imageCitations[cover] && !event.content.some(block => block.src === cover)
+
   return (
     <dialog
       className={`event-dialog era-${event?.chapter.id || chapters[0].id}`}
@@ -359,12 +478,17 @@ function EventDialog({ event, dialogRef, onClose }) {
           </header>
           <div className="event-detail-copy">
             <div className="event-detail-title">
-              {event.date && <div className="event-date">{event.date}</div>}
+              {event.date && (
+                <div className="event-date">{event.date}<CitationRefs numbers={event.summary.citations} /></div>
+              )}
               <h2 id="event-dialog-title">{event.title}</h2>
             </div>
             {event.content.length
               ? event.content.map((block, index) => <EventContentBlock key={index} block={block} />)
               : <p>[Add the story for this event.]</p>}
+            {showCover && (
+              <EventContentBlock block={{ type: 'image', src: cover, alt: event.summary.imageAlt, caption: event.summary.imageAlt }} />
+            )}
           </div>
         </article>
       )}
@@ -457,7 +581,7 @@ function Timeline() {
           <div className="timeline-controls-inner">
             <nav className="chapter-nav" aria-label="Timeline chapters">
               {chapters.map((chapter, index) => (
-                <button key={chapter.id} type="button" aria-current={current.chapter === chapter ? 'step' : undefined} onClick={() => goToEvent(chapterStarts[index])}>
+                <button key={chapter.id} className={`era-${chapter.id}`} type="button" aria-current={current.chapter === chapter ? 'step' : undefined} onClick={() => goToEvent(chapterStarts[index])}>
                   <span className="chapter-dot" />{chapter.title}
                 </button>
               ))}
@@ -501,14 +625,17 @@ function WorksCited() {
           <div className="section-label"><span /> MLA format</div>
           <h2 id="works-cited-title">Works Cited</h2>
         </div>
-        <ul className="citation-list">
-          {worksCited.map(({ type, entry, container, details }, index) => (
-            <li key={index}>
-              {type && <div className="citation-type">{type}</div>}
-              <p>{entry} <cite>{container}</cite>{details}</p>
+        <ol className="citation-list" role="list">
+          {worksCited.map(({ number, entry, container, details, url }) => (
+            <li key={number} id={`source-${number}`} tabIndex={-1}>
+              <span className="citation-number">[{number}]</span>
+              <p>
+                {entry && `${entry} `}<cite>{container}</cite>{details}
+                {url && <> <a href={url} aria-label={`Open source ${number}: ${entry || container}`}>View source</a></>}
+              </p>
             </li>
           ))}
-        </ul>
+        </ol>
       </div>
     </section>
   )
