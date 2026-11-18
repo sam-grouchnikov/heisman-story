@@ -2,17 +2,179 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="./public/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#151b16" />
     <meta name="description" content="The life behind the legend. Explore John Heisman's story before, during, and after Georgia Tech." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&amp;family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./src/fonts.css" />
+    <link rel="stylesheet" href="./src/index.css" />
+    <link rel="stylesheet" href="./src/App.css" />
     <title>John Heisman: The Life Behind the Legend</title>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <a class="skip-link" href="#intro">Skip to story</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="site-brand" href="#intro"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20C1 12 7 3 20 4c3 8-3 17-16 16Z"></path><path d="m8 16 8-8M9 11l4 4M11 9l4 4M13 7l4 4M4 14l6 6M14 4l6 6"></path></svg>John Heisman</a>
+        <nav class="site-nav" aria-label="Story sections">
+          <a href="#intro">Intro</a>
+          <a href="#timeline">Timeline</a>
+          <a href="#works-cited">Works Cited</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <section id="intro" class="intro-scroll" aria-labelledby="hook-title">
+        <div class="intro-scene">
+          <div class="field intro-field" aria-hidden="true">
+            <div class="field-stands field-stands-left"></div>
+            <div class="field-stands field-stands-right"></div>
+            <div class="field-perspective">
+              <div class="field-plane">
+                <div class="field-yard-lines"></div>
+                <div class="field-hashes"></div>
+                <div class="field-yard-numbers">
+                  <div><span>50</span><span>50</span></div>
+                  <div><span>40</span><span>40</span></div>
+                  <div><span>30</span><span>30</span></div>
+                  <div><span>20</span><span>20</span></div>
+                  <div><span>10</span><span>10</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="field-shade"></div>
+          </div>
+          <div class="intro-inner">
+            <div class="intro-copy">
+              <p class="intro-location"><span></span>Grant Field · Atlanta</p>
+              <h2 id="hook-title" class="intro-heading">222–0</h2>
+              <p class="intro-game-story">On October 7, 1916, the Georgia Tech Golden Tornadoes beat Cumberland by a margin that still stands as the largest in college football history.<span class="citation-refs"><a href="#source-5" aria-label="Works Cited source 5">[5]</a><a href="#source-22" aria-label="Works Cited source 22">[22]</a></span></p>
+              <p class="intro-question">Who coached Georgia Tech that day?</p>
+              <a class="explore-link" href="#overview"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14m-6-6 6 6 6-6"></path></svg> Meet the coach</a>
+            </div>
+            <div class="intro-photos">
+              <figure>
+                <img alt="Football players gather around a tackle at Grant Field" width="800" height="617" loading="eager" src="./public/images/cumberland-game-1916.jpg">
+                <figcaption><span>Georgia Tech vs. Cumberland, 1916</span><span>Georgia Tech Archives<span class="citation-refs"><a href="#source-21" aria-label="Works Cited source 21">[21]</a></span></span></figcaption>
+              </figure>
+              <figure>
+                <img alt="Scoreboard showing Georgia Tech scoring 63, 63, 54 and 42 by quarter for a total of 222, with Cumberland at zero" width="1200" height="515" loading="eager" src="./public/images/cumberland-scoreboard-1916.jpg">
+                <figcaption><span>The final score</span><span>From The Rumble Seat<span class="citation-refs"><a href="#source-22" aria-label="Works Cited source 22">[22]</a></span></span></figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="overview" class="story-overview" aria-labelledby="overview-title" tabindex="-1">
+        <div class="story-overview-inner">
+          <div class="story-overview-copy">
+            <p class="section-label"><span></span>The Coach Behind the Trophy</p>
+            <h1 id="overview-title">John Heisman</h1>
+            <p class="story-overview-summary">Every year, the Heisman Trophy goes to an outstanding college football player. It took John Heisman’s name after his death in 1936, honoring a coach who had already changed how the game was played.<span class="citation-refs"><a href="#source-6" aria-label="Works Cited source 6">[6]</a><a href="#source-27" aria-label="Works Cited source 27">[27]</a></span></p>
+            <p class="story-overview-summary">Heisman coached at Georgia Tech from 1904 to 1919. He pressed for the rule change that legalized the forward pass in 1906 and led Georgia Tech to its first national championship in 1917.<span class="citation-refs"><a href="#source-5" aria-label="Works Cited source 5">[5]</a><a href="#source-6" aria-label="Works Cited source 6">[6]</a></span></p>
+            <p class="story-overview-lead">The story begins in the fall of 1869, when Heisman was born in Cleveland, Ohio.<span class="citation-refs"><a href="#source-5" aria-label="Works Cited source 5">[5]</a></span></p>
+            <a class="explore-link" href="#timeline"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14m-6-6 6 6 6-6"></path></svg> Explore the timeline</a>
+          </div>
+          <div class="intro-photos">
+            <figure>
+              <img alt="Black-and-white portrait of John Heisman in a dark athletic shirt" width="1080" height="540" loading="lazy" src="./public/images/john-heisman-portrait.jpg">
+              <figcaption><span>John Heisman</span><span>Collegiate Images / Getty Images<span class="citation-refs"><a href="#source-23" aria-label="Works Cited source 23">[23]</a></span></span></figcaption>
+            </figure>
+            <figure>
+              <img alt="The bronze Heisman Trophy depicts a football player with one arm extended" width="1200" height="766" loading="lazy" src="./public/images/heisman-memorial-trophy.jpg">
+              <figcaption><span>The Heisman Memorial Trophy</span><span>Kelly Kline / Heisman Trophy Trust / Getty Images<span class="citation-refs"><a href="#source-23" aria-label="Works Cited source 23">[23]</a></span></span></figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+      <section id="timeline" class="timeline-scroll" aria-labelledby="timeline-title" tabindex="-1" style="--reel-length: 23.75; --event-intervals: 23">
+        <div class="timeline-scene era-before">
+          <div class="timeline-stage">
+            <div class="reel-track" aria-hidden="true">
+              <svg viewBox="0 0 1000 1000" preserveAspectRatio="none">
+                <path class="reel-surface"></path>
+                <g class="reel-sections"></g>
+                <g class="reel-stripes"></g>
+                <path class="reel-yard-lines"></path>
+                <path class="reel-hashes"></path>
+                <path class="reel-goal-lines"></path>
+                <path class="reel-goalpost"></path>
+              </svg>
+              <div class="reel-markings"></div>
+              <div class="reel-dates"></div>
+            </div>
+            <div class="timeline-stage-inner">
+              <div class="timeline-heading">
+                <h2 id="timeline-title">The Timeline</h2>
+                <div class="timeline-era">Before Tech</div>
+                <p class="timeline-years">1869–1903</p>
+              </div>
+              <p class="timeline-scroll-hint">Scroll downfield <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14m-6-6 6 6 6-6"></path></svg></p>
+              <a class="timeline-scroll-hint" href="#works-cited" hidden>Works Cited <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14m-6-6 6 6 6-6"></path></svg></a>
+              <div class="timeline-cards"></div>
+            </div>
+          </div>
+          <div class="timeline-controls">
+            <div class="timeline-controls-inner">
+              <nav class="chapter-nav" aria-label="Timeline chapters"></nav>
+              <div class="timeline-slider" style="--timeline-progress: 0%; --during-start: 54.347826%; --after-start: 80.434783%">
+                <div class="timeline-track" aria-hidden="true"></div>
+                <input aria-label="Timeline event" aria-valuetext="Before Tech, The Birth of a Legend" min="0" max="23" step="any" type="range" value="0">
+              </div>
+              <div class="event-navigation">
+                <button class="icon-button" type="button" aria-label="Previous event" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m6 6-6-6 6-6"></path></svg></button>
+                <output aria-label="Event position">01 <span>/</span> 24</output>
+                <button class="icon-button" type="button" aria-label="Next event"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <dialog class="event-dialog era-before" aria-labelledby="event-dialog-title">
+          <article class="event-detail">
+            <header class="event-detail-bar">
+              <div class="event-detail-bar-inner">
+                <form method="dialog">
+                  <button class="event-detail-back"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m6 6-6-6 6-6"></path></svg> Back to timeline</button>
+                </form>
+                <span></span>
+              </div>
+            </header>
+            <div class="event-detail-copy">
+              <div class="event-detail-title">
+                <div class="event-date"></div>
+                <h2 id="event-dialog-title"></h2>
+              </div>
+            </div>
+          </article>
+        </dialog>
+      </section>
+      <section class="works-cited" id="works-cited" aria-labelledby="works-cited-title">
+        <div class="works-cited-inner">
+          <div class="works-cited-heading">
+            <div class="section-label"><span></span> MLA format</div>
+            <h2 id="works-cited-title">Works Cited</h2>
+          </div>
+          <ol class="citation-list" role="list"></ol>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <span>John Heisman <span class="footer-divider">/</span> The Coach Behind the Trophy</span>
+        <a href="#intro">Back to top <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"></path></svg></a>
+      </div>
+    </footer>
+    <template id="event-card-template">
+      <button type="button" class="event-card">
+        <span class="event-card-era"></span>
+        <span class="event-card-image-placeholder" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"></rect><circle cx="9" cy="9" r="1.5"></circle><path d="m4 17 5-4 4 3 3-5 5 5"></path></svg><span>Image placeholder</span></span>
+        <div class="event-card-copy">
+          <div class="event-card-title"></div>
+          <div class="event-date"></div>
+          <p class="event-card-preview"></p>
+        </div>
+      </button>
+    </template>
+    <script type="module" src="./src/main.js"></script>
   </body>
 </html>

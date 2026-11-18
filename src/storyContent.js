@@ -30,63 +30,6 @@ import afterTech05 from './events/after-tech-05.js'
 
 export { worksCited } from './worksCited.js'
 
-export const introduction = {
-  title: 'John Heisman',
-  subtitle: 'The Coach Behind the Trophy',
-  location: 'Grant Field · Atlanta',
-  heading: '222–0',
-  gameStory: 'On October 7, 1916, the Georgia Tech Golden Tornadoes beat Cumberland by a margin that still stands as the largest in college football history.',
-  gameCitations: [5, 22],
-  question: 'Who coached Georgia Tech that day?',
-  description: [
-    'Every year, the Heisman Trophy goes to an outstanding college football player. It took John Heisman’s name after his death in 1936, honoring a coach who had already changed how the game was played.',
-    'Heisman coached at Georgia Tech from 1904 to 1919. He pressed for the rule change that legalized the forward pass in 1906 and led Georgia Tech to its first national championship in 1917.',
-  ],
-  descriptionCitations: [[6, 27], [5, 6]],
-  lead: 'The story begins in the fall of 1869, when Heisman was born in Cleveland, Ohio.',
-  leadCitations: [5],
-  gamePhotos: [
-    {
-      src: '/images/cumberland-game-1916.jpg',
-      width: 800,
-      height: 617,
-      alt: 'Football players gather around a tackle at Grant Field',
-      caption: 'Georgia Tech vs. Cumberland, 1916',
-      credit: 'Georgia Tech Archives',
-      citations: [21],
-    },
-    {
-      src: '/images/cumberland-scoreboard-1916.jpg',
-      width: 1200,
-      height: 515,
-      alt: 'Scoreboard showing Georgia Tech scoring 63, 63, 54 and 42 by quarter for a total of 222, with Cumberland at zero',
-      caption: 'The final score',
-      credit: 'From The Rumble Seat',
-      citations: [22],
-    },
-  ],
-  overviewPhotos: [
-    {
-      src: '/images/john-heisman-portrait.jpg',
-      width: 1080,
-      height: 540,
-      alt: 'Black-and-white portrait of John Heisman in a dark athletic shirt',
-      caption: 'John Heisman',
-      credit: 'Collegiate Images / Getty Images',
-      citations: [23],
-    },
-    {
-      src: '/images/heisman-memorial-trophy.jpg',
-      width: 1200,
-      height: 766,
-      alt: 'The bronze Heisman Trophy depicts a football player with one arm extended',
-      caption: 'The Heisman Memorial Trophy',
-      credit: 'Kelly Kline / Heisman Trophy Trust / Getty Images',
-      citations: [23],
-    },
-  ],
-}
-
 export const chapters = [
   {
     id: 'before',
