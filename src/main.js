@@ -15,6 +15,7 @@ function watchScrollProgress(section, scene, render) {
     if (!frame) frame = requestAnimationFrame(measure)
   }
 
+
   if (typeof ResizeObserver === 'function') {
     const observer = new ResizeObserver(scheduleMeasure)
     observer.observe(section)
