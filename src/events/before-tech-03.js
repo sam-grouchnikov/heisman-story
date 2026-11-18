@@ -2,7 +2,7 @@ export default {
   summary: {
     title: 'Heisman at Brown',
     date: '1887',
-    image: '/images/placeholder-event-1.png',
+    image: '/images/heisman-brown.jpg',
     imageAlt: 'Describe what the photo shows',
   },
   content: [
